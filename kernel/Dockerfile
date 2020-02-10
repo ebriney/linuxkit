@@ -112,21 +112,8 @@ RUN tar cJf /out/src/linux.tar.xz /linux
 
 # Kernel config
 # The s390x defconfig moved with 5.2.x
-RUN case $(uname -m) in \
-    x86_64) \
-        KERNEL_DEF_CONF=/linux/arch/x86/configs/x86_64_defconfig; \
-        ;; \
-    aarch64) \
-        KERNEL_DEF_CONF=/linux/arch/arm64/configs/defconfig; \
-        ;; \
-    s390x) \
-        if [ -f /linux/arch/s390/defconfig ]; then \
-            KERNEL_DEF_CONF=/linux/arch/s390/defconfig; \
-        else \
-            KERNEL_DEF_CONF=/linux/arch/s390/configs/defconfig; \
-        fi; \
-        ;; \
-    esac  && \
+RUN set -x; \
+    KERNEL_DEF_CONF=/linux/arch/x86/configs/x86_64_defconfig; \
     cp /config-${KERNEL_SERIES}-$(uname -m) ${KERNEL_DEF_CONF}; \
     if [ -n "${EXTRA}" ] && [ -f "/config-${KERNEL_SERIES}-$(uname -m)${EXTRA}" ]; then \
         cat /config-${KERNEL_SERIES}-$(uname -m)${EXTRA} >> ${KERNEL_DEF_CONF}; \
@@ -135,14 +122,13 @@ RUN case $(uname -m) in \
     if [ -n "${DEBUG}" ]; then \
         sed -i 's/CONFIG_PANIC_ON_OOPS=y/# CONFIG_PANIC_ON_OOPS is not set/' ${KERNEL_DEF_CONF}; \
         cat /config${DEBUG} >> ${KERNEL_DEF_CONF}; \
-    fi && \
-    make defconfig && \
-    make oldconfig && \
-    if [ -z "${EXTRA}" ] && [ -z "${DEBUG}" ]; then diff -u .config ${KERNEL_DEF_CONF}; fi
+    fi
 
+RUN    make defconfig
+RUN    make oldconfig
 
 # Kernel
-RUN case $(uname -m) in \
+RUN set -x; case $(uname -m) in \
     s390x) \
         KCFLAGS="-fno-pie -fPIC"; \
         ;; \

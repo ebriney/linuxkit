@@ -118,7 +118,7 @@ forcebuild_$(2)$(3)$(4): Dockerfile Makefile $(wildcard patches-$(2)/*) $(wildca
 		--no-cache -t $(ORG)/$(IMAGE):$(1)$(3)$(4)-$(TAG)$(SUFFIX) .
 
 push_$(2)$(3)$(4): build_$(2)$(3)$(4)
-	@if [ x"$(DIRTY)" !=  x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
+	if [ x"$(DIRTY)" !=  x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
 	docker pull $(ORG)/$(IMAGE):$(1)$(3)$(4)-$(TAG)$(SUFFIX) || \
 		(docker push $(ORG)/$(IMAGE):$(1)$(3)$(4)-$(TAG)$(SUFFIX) && \
 		 docker tag $(ORG)/$(IMAGE):$(1)$(3)$(4)-$(TAG)$(SUFFIX) $(ORG)/$(IMAGE):$(1)$(3)$(4)$(SUFFIX) && \
@@ -127,7 +127,7 @@ push_$(2)$(3)$(4): build_$(2)$(3)$(4)
 		 $(PUSH_MANIFEST) $(ORG)/$(IMAGE):$(1)$(3)$(4) $(DOCKER_CONTENT_TRUST))
 
 forcepush_$(2)$(3)$(4): forcebuild_$(2)$(3)$(4)
-	@if [ x"$(DIRTY)" !=  x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
+	if [ x"$(DIRTY)" !=  x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
 	docker push $(ORG)/$(IMAGE):$(1)$(3)$(4)-$(TAG)$(SUFFIX) && \
 	 docker tag $(ORG)/$(IMAGE):$(1)$(3)$(4)-$(TAG)$(SUFFIX) $(ORG)/$(IMAGE):$(1)$(3)$(4)$(SUFFIX) && \
 	 docker push $(ORG)/$(IMAGE):$(1)$(3)$(4)$(SUFFIX) && \
@@ -135,7 +135,7 @@ forcepush_$(2)$(3)$(4): forcebuild_$(2)$(3)$(4)
 	 $(PUSH_MANIFEST) $(ORG)/$(IMAGE):$(1)$(3)$(4) $(DOCKER_CONTENT_TRUST)
 
 show-tag_$(2)$(3)$(4):
-	@echo $(ORG)/$(IMAGE):$(1)$(3)$(4)-$(TAG)
+	echo $(ORG)/$(IMAGE):$(1)$(3)$(4)-$(TAG)
 
 build: build_$(2)$(3)$(4)
 forcebuild: forcebuild_$(2)$(3)$(4)
@@ -164,7 +164,7 @@ forcebuild_perf_$(2)$(3)$(4): build_$(2)$(3)$(4)
 		--no-cache --network=none $(LABEL) -t $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4)-$(TAG)$(SUFFIX) .
 
 push_perf_$(2)$(3)$(4): build_perf_$(2)$(3)$(4)
-	@if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
+	if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
 	docker pull $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4)-$(TAG)$(SUFFIX) || \
 		(docker push $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4)-$(TAG)$(SUFFIX) && \
 		 docker tag $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4)-$(TAG)$(SUFFIX) $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4)$(SUFFIX) && \
@@ -173,7 +173,7 @@ push_perf_$(2)$(3)$(4): build_perf_$(2)$(3)$(4)
 		 $(PUSH_MANIFEST) $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4) $(DOCKER_CONTENT_TRUST))
 
 forcepush_perf_$(2)$(3)$(4): forcebuild_perf_$(2)$(3)$(4)
-	@if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
+	if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
 	docker push $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4)-$(TAG)$(SUFFIX) && \
 	docker tag $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4)-$(TAG)$(SUFFIX) $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4)$(SUFFIX) && \
 	docker push $(ORG)/$(IMAGE_PERF):$(1)$(3)$(4)$(SUFFIX) && \
@@ -202,7 +202,7 @@ forcebuild_bcc_$(2)$(3)$(4): build_$(2)$(3)$(4)
 		--no-cache $(LABEL) -t $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4)-$(TAG)$(SUFFIX) .
 
 push_bcc_$(2)$(3)$(4): build_bcc_$(2)$(3)$(4)
-	@if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
+	if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
 	docker pull $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4)-$(TAG)$(SUFFIX) || \
 		(docker push $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4)-$(TAG)$(SUFFIX) && \
 		 docker tag $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4)-$(TAG)$(SUFFIX) $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4)$(SUFFIX) && \
@@ -211,7 +211,7 @@ push_bcc_$(2)$(3)$(4): build_bcc_$(2)$(3)$(4)
 		 $(PUSH_MANIFEST) $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4) $(DOCKER_CONTENT_TRUST))
 
 forcepush_bcc_$(2)$(3)$(4): forcebuild_bcc_$(2)$(3)$(4)
-	@if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
+	if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
 	docker push $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4)-$(TAG)$(SUFFIX) && \
 	docker tag $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4)-$(TAG)$(SUFFIX) $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4)$(SUFFIX) && \
 	docker push $(ORG)/$(IMAGE_BCC):$(1)$(3)$(4)$(SUFFIX) && \
@@ -236,7 +236,7 @@ build_zfs_$(2)$(3): build_$(2)$(3)
 			--no-cache $(LABEL) -t $(ORG)/$(IMAGE_ZFS):$(1)$(3)-$(TAG)$(SUFFIX) .
 
 push_zfs_$(2)$(3): build_zfs_$(2)$(3)
-	@if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
+	if [ x"$(DIRTY)" != x ]; then echo "Your repository is not clean. Will not push image"; exit 1; fi
 	docker pull $(ORG)/$(IMAGE_ZFS):$(1)$(3)-$(TAG)$(SUFFIX) || \
 		(docker push $(ORG)/$(IMAGE_ZFS):$(1)$(3)-$(TAG)$(SUFFIX) && \
 		 docker tag $(ORG)/$(IMAGE_ZFS):$(1)$(3)-$(TAG)$(SUFFIX) $(ORG)/$(IMAGE_ZFS):$(1)$(3)$(SUFFIX) && \
